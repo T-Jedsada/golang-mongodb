@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/golang-mongodb/model"
 	mgo "gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 func main() {
@@ -14,9 +16,15 @@ func main() {
 	}
 	defer db.Close()
 	c := db.DB("test").C("employee")
-	count, err := c.Count()
 	if err != nil {
 		fmt.Print(err)
 	}
-	fmt.Printf("%d\n", count)
+
+	var employee []model.Employee
+
+	c.Find(bson.M{}).All(&employee)
+
+	for index, item := range employee {
+		fmt.Printf("index at %d : %s\n", index, item)
+	}
 }
