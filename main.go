@@ -27,36 +27,59 @@ func main() {
 		return
 	}
 
-	employee := getEmployeeByID("9")
-	if employee == nil {
-		fmt.Println("Could not get employee")
-	}
-	fmt.Println(employee)
+	insertEmployee(getMockModel())
 
-	employeies := getAllEmployee(session)
-	if len(employeies) == 0 {
-		fmt.Println("Not have any Employee")
-	} else {
-		for index, item := range employeies {
-			fmt.Printf("index at %d : %s\n", index, item)
-		}
-	}
+	// employeies := getAllEmployee()
+	// if len(employeies) == 0 {
+	// 	fmt.Println("Not have any Employee")
+	// } else {
+	// 	for _, item := range employeies {
+	// 		fmt.Println(item.ID)
+	// 	}
+	// }
+
+	// deleteEmployee(employeies[len(employeies)-1].ID)
+
+	// employee := getEmployeeByID(employeies[len(employeies)-1].ID)
+	// if employee == nil {
+	// 	log.Println("Could not get employee")
+	// } else {
+	// 	log.Println(employee)
+	// }
 }
 
-func getEmployeeByID(employeeID string) (employee *model.Employee) {
-	collection.Find(bson.M{"id": employeeID}).One(&employee)
+func getEmployeeByID(employeeID bson.ObjectId) (employee *model.Employee) {
+	collection.Find(bson.M{"_id": employeeID}).One(&employee)
 	return employee
 }
 
-func getAllEmployee(s *mgo.Session) (employies []model.Employee) {
+func getAllEmployee() (employies []model.Employee) {
 	collection.Find(bson.M{}).All(&employies)
 	return employies
 }
 
-func deleteEmployee(s *mgo.Session, employeeID string) (isSuccess bool) {
-	return false
+func insertEmployee(employeeModel model.Employee) {
+	err := collection.Insert(employeeModel)
+	if err != nil {
+		log.Println("Error creating Employee: ", err.Error())
+	} else {
+		log.Println("Created Employee success")
+	}
 }
 
-func addEmployee(s *mgo.Session, employee model.Employee) (isSuccess bool) {
-	return false
+func deleteEmployee(employeeID bson.ObjectId) {
+	err := collection.RemoveId(employeeID)
+	if err != nil {
+		log.Println("Error delete Employee: ", err.Error())
+	} else {
+		log.Println("Deleted Employee success")
+	}
+}
+
+func getMockModel() (model model.Employee) {
+	model.ID = bson.NewObjectId()
+	model.Email = "golang@gmail.com"
+	model.Password = "golang"
+	model.Username = "Golang"
+	return model
 }
