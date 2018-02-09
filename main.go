@@ -27,16 +27,16 @@ func main() {
 		return
 	}
 
-	insertEmployee(getMockModel())
+	// insertEmployee(getMockModel())
 
-	// employeies := getAllEmployee()
-	// if len(employeies) == 0 {
-	// 	fmt.Println("Not have any Employee")
-	// } else {
-	// 	for _, item := range employeies {
-	// 		fmt.Println(item.ID)
-	// 	}
-	// }
+	employeies := getAllEmployee()
+	if len(employeies) == 0 {
+		fmt.Println("Not have any Employee")
+	} else {
+		for _, item := range employeies {
+			fmt.Println(item.ID)
+		}
+	}
 
 	// deleteEmployee(employeies[len(employeies)-1].ID)
 
@@ -46,6 +46,10 @@ func main() {
 	// } else {
 	// 	log.Println(employee)
 	// }
+
+	// var model = employeies[len(employeies)-1]
+	// model.Username = "golang2"
+	// updateEmployee(employeies[len(employeies)-1].ID, model)
 }
 
 func getEmployeeByID(employeeID bson.ObjectId) (employee *model.Employee) {
@@ -63,7 +67,16 @@ func insertEmployee(employeeModel model.Employee) {
 	if err != nil {
 		log.Println("Error creating Employee: ", err.Error())
 	} else {
-		log.Println("Created Employee success")
+		log.Println("Created Employee successfully")
+	}
+}
+
+func updateEmployee(employeeID bson.ObjectId, employeeModel model.Employee) {
+	err := collection.UpdateId(employeeID, employeeModel)
+	if err != nil {
+		log.Println("Error update Employee: ", err.Error())
+	} else {
+		log.Println("Updated Employee successfully")
 	}
 }
 
@@ -72,7 +85,7 @@ func deleteEmployee(employeeID bson.ObjectId) {
 	if err != nil {
 		log.Println("Error delete Employee: ", err.Error())
 	} else {
-		log.Println("Deleted Employee success")
+		log.Println("Deleted Employee successfully")
 	}
 }
 
