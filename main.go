@@ -17,7 +17,6 @@ func main() {
 	count, err := c.Count()
 	if err != nil {
 		fmt.Print(err)
-	} else {
-		fmt.Printf("%d\n", count)
 	}
+	fmt.Printf("%d\n", count)
 }
