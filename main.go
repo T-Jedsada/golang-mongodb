@@ -51,10 +51,10 @@ func getAllEmployee(s *mgo.Session) (employies []model.Employee) {
 	return employies
 }
 
-func deleteEmployee(s *mgo.Session, employeeID string) bool {
+func deleteEmployee(s *mgo.Session, employeeID string) (isSuccess bool) {
 	return false
 }
 
-func addEmployee(s *mgo.Session, employee model.Employee) {
-
+func addEmployee(s *mgo.Session, employee model.Employee) (isSuccess bool) {
+	return false
 }
