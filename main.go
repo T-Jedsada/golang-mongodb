@@ -9,6 +9,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+var collection *mgo.Collection
+
 func main() {
 	session, err := mgo.Dial("localhost")
 	if err != nil {
@@ -18,8 +20,14 @@ func main() {
 	if err != nil {
 		fmt.Print(err)
 	}
+	defer session.Close()
+	collection = session.DB("test").C("employee")
+	if collection == nil {
+		log.Fatal("Could not get collection employee")
+		return
+	}
 
-	employee := getEmployeeByID(session, "9")
+	employee := getEmployeeByID("9")
 	if employee == nil {
 		fmt.Println("Could not get employee")
 	}
@@ -35,19 +43,13 @@ func main() {
 	}
 }
 
-func getEmployeeByID(s *mgo.Session, employeeID string) (employee *model.Employee) {
-	session := s.Copy()
-	defer session.Close()
-	c := session.DB("test").C("employee")
-	c.Find(bson.M{"id": employeeID}).One(&employee)
+func getEmployeeByID(employeeID string) (employee *model.Employee) {
+	collection.Find(bson.M{"id": employeeID}).One(&employee)
 	return employee
 }
 
 func getAllEmployee(s *mgo.Session) (employies []model.Employee) {
-	session := s.Copy()
-	defer session.Close()
-	c := session.DB("test").C("employee")
-	c.Find(bson.M{}).All(&employies)
+	collection.Find(bson.M{}).All(&employies)
 	return employies
 }
 
